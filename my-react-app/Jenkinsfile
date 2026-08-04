@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'NodeJS'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/bgauri05/my-react-app.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('my-react-app') {
+                    bat 'npm install'
+                }
+            }
+        }
+
+        stage('Build React App') {
+            steps {
+                dir('my-react-app') {
+                    bat 'npm run build'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build Successful'
+        }
+        failure {
+            echo 'Build Failed'
+        }
+        always {
+            echo 'Pipeline Finished'
+        }
+    }
+}
